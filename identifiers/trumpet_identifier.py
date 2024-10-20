@@ -1,11 +1,23 @@
-from musical_notes.trumpet_musical_notes import TrumpetDo
+from musical_notes.trumpet_musical_notes import TrumpetDo, TrumpetDoSostenidoReb, TrumpetRe, TrumpetReSostenidoMib, TrumpetMi, TrumpetFa
+from musical_notes.trumpet_musical_notes import TrumpetFaSostenidoSolb, TrumpetSol, TrumpetSolSostenidoLab, TrumpetLa, TrumpetLaSostenidoSib, TrumpetSi
 from dominant_frequency import DominantFrequency
 
 class TrumpetIdentifier:
 
     def __init__(self):
         self.notes = [
-            TrumpetDo()
+            TrumpetDo(),
+            TrumpetDoSostenidoReb(),
+            TrumpetRe(),
+            TrumpetReSostenidoMib(),
+            TrumpetMi(),
+            TrumpetFa(),
+            TrumpetFaSostenidoSolb(),
+            TrumpetSol(),
+            TrumpetSolSostenidoLab(),
+            TrumpetLa(),
+            TrumpetLaSostenidoSib(),
+            TrumpetSi()
         ]
     
     def identify_note_from_audio(self, audio_file, tolerance=5):

@@ -2,7 +2,7 @@ from musical_notes.piano_musical_notes import PianoDo, PianoDoSostenidoReb, Pian
 from musical_notes.piano_musical_notes import PianoSol, PianoSolSostenidoLab,PianoLa, PianoLaSostenidoSib, PianoSi
 from dominant_frequency import DominantFrequency
 
-class Identifier:
+class PianoIdentifier:
 
     def __init__(self):
         self.notes = [
@@ -38,7 +38,7 @@ class Identifier:
 
         return None
 
-class ChordIdentifier(Identifier):
+class ChordIdentifier(PianoIdentifier):
 
     CHORDS = {
         'C Major': ['C', 'E', 'G'],

@@ -2,6 +2,7 @@ from .piano_identifier import PianoIdentifier
 from .guitar_identifier import GuitarIdentifier
 from .trumpet_identifier import TrumpetIdentifier
 from .xylophone_identifier import XylophoneIdentifier
+from .violin_identifier import ViolinIdentifier
 
 class IdentifierFactory:
 
@@ -9,7 +10,8 @@ class IdentifierFactory:
         'Piano': PianoIdentifier(),
         'Guitar': GuitarIdentifier(),
         'Trumpet': TrumpetIdentifier(),
-        'Xylophone': XylophoneIdentifier()
+        'Xylophone': XylophoneIdentifier(),
+        'Violin': ViolinIdentifier()
     }
 
     @staticmethod

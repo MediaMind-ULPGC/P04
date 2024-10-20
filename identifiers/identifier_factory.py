@@ -1,13 +1,15 @@
 from .piano_identifier import PianoIdentifier
 from .guitar_identifier import GuitarIdentifier
 from .trumpet_identifier import TrumpetIdentifier
+from .xylophone_identifier import XylophoneIdentifier
 
 class IdentifierFactory:
 
     __identifiers = {
         'Piano': PianoIdentifier(),
         'Guitar': GuitarIdentifier(),
-        'Trumpet': TrumpetIdentifier()
+        'Trumpet': TrumpetIdentifier(),
+        'Xylophone': XylophoneIdentifier()
     }
 
     @staticmethod

@@ -38,61 +38,75 @@ class PianoIdentifier:
 
         return None
 
-class ChordIdentifier(PianoIdentifier):
+class PianoChordIdentifier:
 
-    CHORDS = {
-        'C Major': ['C', 'E', 'G'],
-        'C Minor': ['C', 'D#', 'G'],
-        'D Major': ['D', 'F#', 'A'],
-        'D Minor': ['D', 'F', 'A'],
-        'E Major': ['E', 'G#', 'B'],
-        'E Minor': ['E', 'G', 'B'],
+    _CHORDS = {
+        'Do Mayor': ['C', 'E', 'G'],
+        'Do Menor (Cm)': ['C', 'D#', 'G'],
+        'Do Sostenido Mayor (C#)': ['C#', 'F', 'G#'],
+        'Do Sostenido Menor (C#m)': ['C#', 'E', 'G#'],
+        'Re Mayor': ['D', 'F#', 'A'],
+        'Re Menor (Dm)': ['D', 'F', 'A'],
+        'Re Sostenido Mayor (D#)': ['D#', 'G', 'A#'],
+        'Re Sostenido Menor (D#m)': ['D#', 'F#', 'A#'],
+        'Mi Mayor': ['E', 'G#', 'B'],
+        'Mi Menor (Em)': ['E', 'G', 'B'],
+        'Fa Mayor': ['F', 'A', 'C'],
+        'Fa Menor (Fm)': ['F', 'G#', 'C'],
+        'Fa Sostenido Mayor (F#)': ['F#', 'A#', 'C#'],
+        'Fa Sostenido Menor (F#m)': ['F#', 'A', 'C#'],
+        'Sol Mayor': ['G', 'B', 'D'],
+        'Sol Menor (Gm)': ['G', 'A#', 'D'],
+        'Sol Sostenido Mayor (G#)': ['G#', 'C', 'D#'],
+        'Sol Sostenido Menor (G#m)': ['G#', 'B', 'D#'],
+        'Si Mayor': ['B', 'D#', 'F#'],
+        'Si Menor (Bm)': ['B', 'D', 'F#'],
+        'La Mayor': ['A', 'C#', 'E'],
+        'La Menor (Am)': ['A', 'C', 'E'],
+        'La Sostenido Mayor (A#)': ['A#', 'D', 'F'],
+        'La Sostenido Menor (A#m)': ['A#', 'C#', 'F']
     }
 
-    notes_names = {
-        'PianoDo': 'C',
-        'PianoRe': 'D',
-        'PianoMi': 'E',
-        'PianoFa': 'F',
-        'PianoSol': 'G',
-        'PianoLa': 'A',
-        'PianoSi': 'B',
-        'PianoDoSostenidoReb': 'C#',
-        'PianoReSostenidoMib': 'D#',
-        'PianoFaSostenidoSolb': 'F#',
-        'PianoSolSostenidoLab': 'G#',
+    _notes_names = {
+        'PianoDo': 'C', 'PianoRe': 'D', 'PianoMi': 'E', 'PianoFa': 'F',
+        'PianoSol': 'G', 'PianoLa': 'A', 'PianoSi': 'B', 'PianoDoSostenidoReb': 'C#',
+        'PianoReSostenidoMib': 'D#', 'PianoFaSostenidoSolb': 'F#', 'PianoSolSostenidoLab': 'G#',
         'PianoLaSostenidoSib': 'A#'
     }
 
-    def identify_chord_from_audio(self, audio_file, window_size=2048, overlap=1024, tolerance=5):
-        dominant_freq = DominantFrequency()
-        frequencies, sr = dominant_freq.get_dominant_frequencies(audio_file, window_size, overlap)
+    _notes_names_inverse = {v: k for k, v in _notes_names.items()}
 
-        chords_detected = []
-        current_window_notes = []
+    _pianoIdentifier = PianoIdentifier()
 
-        for frequency in frequencies:
-            note = self.identify_note_from_frequency(frequency, tolerance)
-            if note:
-                note_name = self.notes_names[note]
 
-                if note_name not in current_window_notes:
-                    print(f"Identified note: {note_name}")
-                    current_window_notes.append(note_name)
-            
-            if len(current_window_notes) >= 3:
-                identified_chord = self.identify_chord(current_window_notes)
-                if identified_chord:
-                    chords_detected.append(identified_chord)
-                current_window_notes = []
+    def identify_chord_from_audio(self, audio_file, tolerance=5):
 
-        if not chords_detected:
-            return "No se identificaron acordes."
+        dominant_frequencies = DominantFrequency().get_dominant_frequencies(audio_file)
+        print("Frecuencias dominantes:", dominant_frequencies)
 
-        return chords_detected
+        identified_notes = []
+        for frequency in dominant_frequencies:
+            note_class = self._pianoIdentifier.identify_note_from_frequency(frequency, tolerance)
+            if note_class:
+                note_name = self._notes_names.get(note_class, None)
+                if note_name and note_name not in identified_notes:
+                    identified_notes.append(note_name)
+        
+        identified_chord = self._match_chord(identified_notes)
 
-    def identify_chord(self, notes_in_window):
-        for chord_name, chord_notes in self.CHORDS.items():
-            if all(note in notes_in_window for note in chord_notes):
-                return f"Acorde identificado: {chord_name}"
+        if identified_chord:
+            chord_notes = self._CHORDS[identified_chord]
+            real_names = [self._notes_names_inverse.get(note, note)[5:] for note in chord_notes]
+
+            return f"Acorde identificado: {identified_chord} compuesto por las notas {', '.join(real_names)}"
+        else:
+            return f"No se pudo identificar el acorde con las notas {identified_notes}."
+        
+
+    def _match_chord(self, notes):
+        for chord, notes_chord in self._CHORDS.items():
+            if all(note in notes for note in notes_chord):
+                return chord
+        
         return None
+

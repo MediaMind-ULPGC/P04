@@ -1,5 +1,6 @@
 from scipy.io import wavfile
 from scipy.fft import fft
+from scipy.signal import find_peaks
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -9,12 +10,7 @@ class DominantFrequency:
         pass
 
     @staticmethod
-    def get_dominant_frequency(audio_file):
-        sr, data = wavfile.read(audio_file)
-
-        if len(data.shape) > 1:
-            data = np.mean(data, axis=1)
-
+    def _get_frequencies(sr, data):
         """
         1. Calcular la transformada de Fourier
         2. Clacular las frecuencias
@@ -26,38 +22,49 @@ class DominantFrequency:
         
         fourier = fourier[:len(fourier)//2]
         freqs = freqs[:len(freqs)//2]
-        
-        return freqs[np.argmax(fourier)]
+
+        return fourier, freqs
 
     @staticmethod
-    def get_dominant_frequencies(audio_file, window_size=1024, overlap=512):
+    def get_dominant_frequency(audio_file):
         sr, data = wavfile.read(audio_file)
 
         if len(data.shape) > 1:
             data = np.mean(data, axis=1)
 
-        data = data / np.max(np.abs(data))
+        fourier, freqs = DominantFrequency()._get_frequencies(sr, data)
+        
+        return freqs[np.argmax(fourier)]
+    
+    @staticmethod
+    def get_dominant_frequencies(audio_file, num_frequencies=3, min_distance=2):
+        sr, data = wavfile.read(audio_file)
 
-        step_size = window_size - overlap
-        num_windows = (len(data) - window_size) // step_size + 1
+        if len(data.shape) > 1:
+            data = np.mean(data, axis=1)
 
+        fourier, freqs = DominantFrequency._get_frequencies(sr, data)
+
+        # Encontrar los picos de las frecuencias
+        peaks, _ = find_peaks(fourier, height=0)
+
+        # Ordenar los picos de mayor a menor
+        sorted_peaks = np.argsort(fourier[peaks])[::-1]
+
+        # Lista para almacenar las frecuencias dominantes finales
         dominant_frequencies = []
 
-        for i in range(num_windows):
-            start = i * step_size
-            end = start + window_size
-            window_data = data[start:end]
+        for peak in sorted_peaks:
+            freq = freqs[peaks][peak]
 
-            fourier = np.abs(fft(window_data))
-            freqs = np.fft.fftfreq(len(fourier), 1/sr)
+            if all(abs(freq - existing_freq) > min_distance for existing_freq in dominant_frequencies):
+                dominant_frequencies.append(freq)
 
-            fourier = fourier[:len(fourier) // 2]
-            freqs = freqs[:len(freqs) // 2]
+            if len(dominant_frequencies) >= num_frequencies:
+                break
 
-            dominant_frequency = freqs[np.argmax(fourier)]
-            dominant_frequencies.append(dominant_frequency)
-
-        return dominant_frequencies, sr
+        return dominant_frequencies
+        
 
     @staticmethod
     def plot_frequencies(frequencies, sr, window_size, overlap):

@@ -1,17 +1,19 @@
-from .piano_identifier import PianoIdentifier
+from .piano_identifier import PianoIdentifier, PianoChordIdentifier
 from .guitar_identifier import GuitarIdentifier
 from .trumpet_identifier import TrumpetIdentifier
 from .xylophone_identifier import XylophoneIdentifier
 from .violin_identifier import ViolinIdentifier
 
+
 class IdentifierFactory:
 
     __identifiers = {
         'Piano': PianoIdentifier(),
+        'PianoChords': PianoChordIdentifier(),
         'Guitar': GuitarIdentifier(),
         'Trumpet': TrumpetIdentifier(),
         'Xylophone': XylophoneIdentifier(),
-        'Violin': ViolinIdentifier()
+        'Violin': ViolinIdentifier(),
     }
 
     @staticmethod

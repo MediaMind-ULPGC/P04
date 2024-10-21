@@ -1,5 +1,5 @@
 from .piano_identifier import PianoIdentifier, PianoChordIdentifier
-from .guitar_identifier import GuitarIdentifier
+from .guitar_identifier import GuitarIdentifier, GuitarChordIdentifier
 from .trumpet_identifier import TrumpetIdentifier
 from .xylophone_identifier import XylophoneIdentifier
 from .violin_identifier import ViolinIdentifier
@@ -11,6 +11,7 @@ class IdentifierFactory:
         'Piano': PianoIdentifier(),
         'PianoChords': PianoChordIdentifier(),
         'Guitar': GuitarIdentifier(),
+        'GuitarChords': GuitarChordIdentifier(),
         'Trumpet': TrumpetIdentifier(),
         'Xylophone': XylophoneIdentifier(),
         'Violin': ViolinIdentifier(),

@@ -37,7 +37,7 @@ class DominantFrequency:
         return freqs[np.argmax(fourier)]
     
     @staticmethod
-    def get_dominant_frequencies(audio_file, num_frequencies=3, min_distance=2):
+    def get_dominant_frequencies(audio_file, num_frequencies=3, min_distance=5):
         sr, data = wavfile.read(audio_file)
 
         if len(data.shape) > 1:

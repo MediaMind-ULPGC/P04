@@ -98,7 +98,7 @@ class PianoChordIdentifier:
             chord_notes = self._CHORDS[identified_chord]
             real_names = [self._notes_names_inverse.get(note, note)[5:] for note in chord_notes]
 
-            return f"Acorde identificado: {identified_chord} compuesto por las notas {', '.join(real_names)}"
+            print(f"Acorde identificado del piano: {identified_chord} compuesto por las notas {', '.join(real_names)}")
         else:
             return f"No se pudo identificar el acorde con las notas {identified_notes}."
         

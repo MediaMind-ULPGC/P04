@@ -24,3 +24,11 @@ class XylophoneIdentifier:
                 return f"Nota identificada: {note.__class__.__name__[9:]} en la octava {result}"
 
         return "No se pudo identificar la nota."
+    
+    def identify_note_from_frequency(self, frequency, tolerance=5):
+        for note in self.notes:
+            result = note.is_note(frequency, tolerance)
+            if result:
+                return result, note.__class__.__name__
+
+        return None, None

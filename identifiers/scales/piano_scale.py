@@ -5,7 +5,6 @@ from dominant_frequency import DominantFrequency
 from scipy.io import wavfile
 from scipy.signal import find_peaks
 
-
 class PianoScaleIdentifier:
 
     __piano_identifier = PianoIdentifier()

@@ -11,4 +11,4 @@ class XylophoneChordsIdentifier(ChordIdentifier):
     }
 
     def identify_chord_from_audio(self, audio_file, tolerance=5):
-        return super().identify_chord_from_audio(audio_file, self.__notes_names, XylophoneIdentifier(), 8, tolerance)
+        return super().identify_chord_from_audio(audio_file, self.__notes_names, XylophoneIdentifier(), 9, tolerance)

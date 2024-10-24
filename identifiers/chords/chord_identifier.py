@@ -33,7 +33,6 @@ class ChordIdentifier:
         notes_names_inverse = {v: k for k, v in notes_names.items()}
 
         dominant_frequencies = DominantFrequency().get_dominant_frequencies(audio_file)
-        print("Frecuencias dominantes:", dominant_frequencies)
 
         identified_notes = []
         for frequency in dominant_frequencies:
@@ -49,17 +48,19 @@ class ChordIdentifier:
         if len(matches) == 1 and matches[0][1] == 3:
             identified_chord, _ = matches[0]
             if identified_chord is None:
-                return "No se pudo identificar un acorde válido."
+                return None, None, None, None
             chord_notes = self.__CHORDS[identified_chord]
             real_names = [notes_names_inverse.get(note, note)[n:] for note in chord_notes]
-            return f"Acorde identificado de la guitarra: {identified_chord} compuesto por las notas {', '.join(real_names)}"
+            return identified_chord, real_names, [round(freq, 2) for freq in dominant_frequencies], True
 
         # Si hay aproximaciones
         elif len(matches) > 0:
-            approximations_info = []
+            identified_chords_approx = []
+            notes_approx = []
+
             for identified_chord, match_score in matches:
                 if identified_chord is None:
-                    return "No se pudo identificar un acorde válido."
+                    None, None, None, None
                 chord_notes = self.__CHORDS[identified_chord]
                 real_names = [notes_names_inverse.get(note, note)[n:] for note in chord_notes]
 
@@ -67,14 +68,12 @@ class ChordIdentifier:
                 matching_notes = [note for note in identified_notes if note in chord_notes]
                 matching_real_names = [notes_names_inverse.get(note, note)[n:] for note in matching_notes]
 
-                approximations_info.append(
-                    f"Acorde aproximado: {identified_chord} compuesto por las notas {', '.join(real_names)} "
-                    f"(coinciden: {', '.join(matching_real_names)})"
-                )
+                identified_chords_approx.append(identified_chord)
+                notes_approx.append((real_names, matching_real_names))
 
-            return "\n".join(approximations_info)
+            return identified_chords_approx, notes_approx, [round(freq, 2) for freq in dominant_frequencies], False
         else:
-            return f"No se pudo identificar el acorde con las notas {identified_notes}."
+            return None, identified_notes, [round(freq, 2) for freq in dominant_frequencies],  None
     
 
     def _match_chord(self, notes):
@@ -87,9 +86,8 @@ class ChordIdentifier:
             # Si encontramos un acorde con todas las notas, devolvemos ese acorde y su puntaje
             if match_score == 3:
                 exact_match = (chord, match_score)
-                break  # Detenemos la búsqueda si encontramos un acorde exacto
+                break 
 
-            # Si hay al menos 2 coincidencias, lo consideramos como una aproximación
             if match_score == 2:
                 approximations.append((chord, match_score))
 

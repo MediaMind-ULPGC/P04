@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 
 class DominantFrequency:
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def _get_frequencies(sr, data):
         """

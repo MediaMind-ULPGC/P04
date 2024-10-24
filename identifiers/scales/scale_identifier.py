@@ -89,6 +89,22 @@ class ScaleIdentifier:
         'Do^': 2.5
     }
 
+    colours = {
+        'Do': 'blue',
+        'DoSostenidoReb': 'lightblue',
+        'Re': 'green',
+        'ReSostenidoMib': 'lightgreen',
+        'Mi': 'red',
+        'Fa': 'purple',
+        'FaSostenidoSolb': 'violet',
+        'Sol': 'orange',
+        'SolSostenidoLab': 'gold',
+        'La': 'brown',
+        'LaSostenidoSib': 'sienna',
+        'Si': 'pink',
+        'Do^': 'black'
+    }
+
     def plot_notes_on_staff(self, notes, octaves, time_stamps, start=4):
         plt.figure(figsize=(12, 6))
 
@@ -99,24 +115,23 @@ class ScaleIdentifier:
         
         for note_list, octave_list, time in zip(notes, octaves, time_stamps):
             for note, octave in zip(note_list, octave_list):
-                position = self._position(note, octave, start)
-                
-                plt.scatter(time, position, c='blue', s=100)
+                position, colour = self._position_colour(note, octave, start)
+                plt.scatter(time, position, c=colour, s=100)
         
         plt.yticks(list(self.note_positions.values()), list(self.note_positions.keys()))
-        plt.ylim(-2, 3)  # Ajustar el rango vertical
-        plt.xticks([])  # Quitar los ticks en el eje X
+        plt.ylim(-2, 3)
+        plt.xticks([])
         plt.xlabel('Tiempo (s)')
         plt.ylabel('Notas en el pentagrama')
         plt.title('Notas identificadas en el pentagrama a lo largo del tiempo')
         plt.show()
 
-    def _position(self, note, octave, start=4):
+    def _position_colour(self, note, octave, start=4):
         if note == 'Do' and int(octave[-1]) == start + 1:
-            return self.note_positions['Do^']
+            return self.note_positions['Do^'], self.colours['Do^']
         elif note == 'Do' and int(octave[-1]) == start:
-            return self.note_positions['Do']
+            return self.note_positions['Do'] , self.colours['Do']
         elif note in self.note_positions:
-            return self.note_positions[note]
+            return self.note_positions[note], self.colours[note]
         else:
-            return None
+            return None, None

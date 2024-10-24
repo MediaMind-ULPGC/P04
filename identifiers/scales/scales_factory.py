@@ -1,9 +1,11 @@
 from identifiers.scales.piano_scale import PianoScaleIdentifier
+from identifiers.scales.guitar_scale import GuitarScaleIdentifier
 
 class ScalesIdentifierFactory:
 
     __identifier = {
-        'Piano': PianoScaleIdentifier()
+        'Piano': PianoScaleIdentifier(),
+        'Guitar': GuitarScaleIdentifier()
     }
 
     @staticmethod

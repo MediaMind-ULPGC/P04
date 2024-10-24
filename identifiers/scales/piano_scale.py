@@ -14,10 +14,3 @@ class PianoScaleIdentifier(ScaleIdentifier):
     def plot_scale_over_time(self, notes, frequencies, time_stamps, min_scale=0, max_scale=4000):
         return super().plot_scale_over_time(notes, frequencies, time_stamps, min_scale, max_scale)
 
-    
-
-
-
-        
-    
-

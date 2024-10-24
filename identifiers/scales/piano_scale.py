@@ -4,6 +4,7 @@ from identifiers.single_notes.piano_identifier import PianoIdentifier
 from dominant_frequency import DominantFrequency
 from scipy.io import wavfile
 from scipy.signal import find_peaks
+from collections import Counter
 
 class PianoScaleIdentifier:
 
@@ -52,31 +53,74 @@ class PianoScaleIdentifier:
                         time_stamps.append(time_stamp)
 
         return identified_notes, identified_octaves, dominant_frequencies, time_stamps
-
-    def plot_scale_over_time(self, notes, frequencies, time_stamps):
-        # Comprobar si el tamaño de time_stamps y frequencies es el mismo
+    
+    def plot_scale_over_time(self, notes, frequencies, time_stamps, min_scale=0, max_scale=4000):
         if len(frequencies) == len(time_stamps):
             plt.figure(figsize=(12, 6))
             
-            # Diccionario para almacenar las notas que ya hemos etiquetado para evitar duplicados
+            frequency_count = Counter(freq for sublist in frequencies for freq in sublist)
+
             labeled_notes = {}
 
             for i, (time, freq_list, note_list) in enumerate(zip(time_stamps, frequencies, notes)):
-                # Graficar todas las frecuencias
                 for freq, note in zip(freq_list, note_list):
-                    plt.scatter(time, freq, c='blue')  # Graficar el punto
-                    
-                    # Etiquetar la nota solo si no ha sido etiquetada aún en esa frecuencia
-                    if freq not in labeled_notes:
-                        plt.annotate(note, (time, freq), textcoords="offset points", xytext=(0,10), ha='center')  # Etiquetar la nota
-                        labeled_notes[freq] = note  # Marcar la frecuencia como etiquetada
-                    
-            # Etiquetas y leyenda
+                    if frequency_count[freq] >= 3:
+                        plt.scatter(time, freq, c='blue')
+                        
+                        if freq not in labeled_notes:
+                            plt.annotate(note, (time, freq), textcoords="offset points", xytext=(0,10), ha='center')
+                            labeled_notes[freq] = note
+
+            plt.ylim(min_scale, max_scale)
             plt.xlabel('Tiempo (s)')
             plt.ylabel('Frecuencia (Hz)')
-            plt.title('Frecuencias de las notas en la escala a lo largo del tiempo')
+            plt.title('Frecuencias de las notas en la escala a lo largo del tiempo (3+ repeticiones)')
             plt.grid(True)
             plt.show()
 
         else:
             print("Error: Las longitudes de las frecuencias y las marcas de tiempo no coinciden.")
+    
+    note_positions = {
+        'Do': -1,
+        'Re': -0.5,
+        'Mi': 0,
+        'Fa': 0.5,
+        'Sol': 1, 
+        'La': 1.5,
+        'Si': 2
+    }
+
+    def plot_notes_on_staff(self, notes, time_stamps):
+        plt.figure(figsize=(12, 6))
+        
+        # pintar las lineas cada .5 empezando desde 0.5 hasta 1.5 en discontinua
+        for i in np.arange(-0.5, 2, 0.5):
+            plt.axhline(i, color='black', lw=1, ls='--')
+        
+         # Draw the 5 lines of the staff
+        for i in range(0, 5):
+            plt.axhline(i, color='black', lw=1)
+        
+        labeled_notes = set()  # Keep track of notes that have already been labeled
+        
+        # Plot each note at its corresponding position
+        for note_list, time in zip(notes, time_stamps):
+            for note in note_list:
+                if note in self.note_positions:
+                    position = self.note_positions[note]
+                    plt.scatter(time, position, c='blue', s=100)
+        
+        # Set y-ticks to show the note names at the corresponding positions
+        plt.yticks(list(self.note_positions.values()), list(self.note_positions.keys()))
+        plt.ylim(-2, 5)
+        plt.xticks([])
+        plt.xlabel('Tiempo (s)')
+        plt.ylabel('Notas en el pentagrama')
+        plt.title('Notas identificadas en el pentagrama a lo largo del tiempo')
+        plt.show()
+
+
+        
+    
+

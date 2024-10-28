@@ -327,7 +327,13 @@ En el desarrollo del ejercicio 1, se han identificado las siguientes dificultade
 2. **Limitaciones en el análisis de frecuencia mediante la Transformada de Fourier**  
    Aunque la Transformada de Fourier permite identificar frecuencias en condiciones ideales, se ha observado que la precisión disminuye considerablemente cuando el audio presenta ruidos o interferencias. Esto ha llevado a resultados en los que la frecuencia calculada no corresponde a ninguna nota musical específica. Además, aunque la identificación de acordes es generalmente correcta, en algunos acordes complejos es necesario realizar aproximaciones, ya que reconocer una tercera nota adicional en estos casos suele ser complicado.
 
+En cuanto al ejercicio 2, nos hemos encontrando los siguientes inconvenientes:
+
+1. **Baja calidad de reproducción de audio en librerías y frameworks**
+   A la hora de crear la aplicación de reproducción de audios nos hemos topado con varios inconvenientes en el uso de librería de python como puede ser el caso de `pyaudio` o `sounddevice`, debido a su baja calidad de reproducción de audios, es por ello que hemos recurrido a la API de VLC para abordar esta práctica.
 
 ## Trabajo futuro
 
 - Aunque se ha implementado una tercera sección opcional destinada a la identificación y/o aproximación de la partitura a partir del audio, aún existe margen para mejorar la precisión de este programa. Actualmente, el algoritmo omite las octavas, y en ocasiones las notas correspondientes no son identificadas correctamente. En el futuro, se podrían optimizar estos aspectos para lograr una detección más fiel y detallada de las notas y su disposición en la partitura.
+
+- Aplicar filtros al audio a tiempo real, así como gráficar la señal original y filtrada en el dominio temporal y en el dominio de la frecuencia a medida que se reproduzca el audio.

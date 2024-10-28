@@ -319,4 +319,15 @@ En sistemas Windows o Mac, descarga VLC desde su sito [web oficial](https://www.
 
 ## Problemas encontrados
 
-## Trabajo Futuro
+En el desarrollo del ejercicio 1, se han identificado las siguientes dificultades:
+
+1. **Disponibilidad de audios de libre acceso para pruebas**  
+   A la hora de buscar audios de libre disposición que permitan realizar pruebas de los programas implementados, no se ha logrado encontrar todas las notas de ciertos instrumentos ni todos los acordes deseados. Como consecuencia, no se han podido validar completamente todos los instrumentos y combinaciones de notas diseñados.
+
+2. **Limitaciones en el análisis de frecuencia mediante la Transformada de Fourier**  
+   Aunque la Transformada de Fourier permite identificar frecuencias en condiciones ideales, se ha observado que la precisión disminuye considerablemente cuando el audio presenta ruidos o interferencias. Esto ha llevado a resultados en los que la frecuencia calculada no corresponde a ninguna nota musical específica. Además, aunque la identificación de acordes es generalmente correcta, en algunos acordes complejos es necesario realizar aproximaciones, ya que reconocer una tercera nota adicional en estos casos suele ser complicado.
+
+
+## Trabajo futuro
+
+- Aunque se ha implementado una tercera sección opcional destinada a la identificación y/o aproximación de la partitura a partir del audio, aún existe margen para mejorar la precisión de este programa. Actualmente, el algoritmo omite las octavas, y en ocasiones las notas correspondientes no son identificadas correctamente. En el futuro, se podrían optimizar estos aspectos para lograr una detección más fiel y detallada de las notas y su disposición en la partitura.
